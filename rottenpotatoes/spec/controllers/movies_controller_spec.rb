@@ -20,7 +20,7 @@ describe MoviesController do
             Movie.create({title: 'No Name', rating: 'PG-13', release_date: '11-Jun-1993'}) #create movie with unknown directorr
             Movie.stub(:find_same_director).with(Movie.find(11)).and_return(nil)
             get :search, {id: '11'}
-            expect(response).to redirect_to(movies_path)                                #expect redirection to home page
+            expect(response).to redirect_to(movies_path(back:1))                                #expect redirection to home page
             expect(flash[:notice]).to eq("'No Name' has no director information")       #expect a response from flash
         end
     end
