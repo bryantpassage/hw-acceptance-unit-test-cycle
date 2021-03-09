@@ -37,6 +37,12 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
+  
+  def search
+    @movie_query = Movie.find(params[:id])
+    @director_name = @movie_query.director
+    @movies = Movie.find_same_director(@movie_query)
+  end
 
   private
   # Making "internal" methods private is not required, but is a common practice.

@@ -28,6 +28,10 @@ module NavigationHelpers
     # details page
     when /^the details page for "(.*)"$/ then
       movie_path(Movie.find_by(title: $1))
+      
+    # similar director page
+    when /^the Similar Movies page for "(.*)"$/ then
+      search_similar_movies_path(Movie.find_by(title: $1))
 
     else
       begin
