@@ -2,13 +2,31 @@
 <h2>All Movies</h2>
 
 <%#  Part 2: Start here... %>
+<!-- Added checkboxes for filtering -->
+<%= form_tag movies_path, method: :get, id: 'ratings_form' do %>
+  Include:
+  <% @all_ratings.each do |rating| %>
+    <div class="form-check  form-check-inline">
+      <%= label_tag "ratings[#{rating}]", rating, class: 'form-check-label', style: 'margin-right:5px' %>
+      <%= check_box_tag "ratings[#{rating}]", "1",  @ratings_to_show.include?(rating), class: 'form-check-input' %>
+    </div>
+  <% end %>
+  <!-- added hidden field tag to keep :sort as a parameter-->
+  <%= hidden_field_tag :sort, @sort_by %>
+  <%= hidden_field_tag :home, 1 %>
+  <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
+<% end %>
 
 <table class="table table-striped col-md-12" id="movies">
   <thead>
     <tr>
-      <th>Movie Title</th>
+      <th class=<%= 'hilite' if @sort_by == "title" %>>
+        <%= link_to 'Movie Title', movies_path(sort: "title", ratings: Hash[@ratings_to_show.map{|val| [val,1]}], home: 1), id: "title_header" %>
+      </th>
       <th>Rating</th>
-      <th>Release Date</th>
+      <th class=<%= 'hilite' if @sort_by == "release_date" %>>
+        <%= link_to 'Release Date', movies_path(sort: "release_date", ratings: Hash[@ratings_to_show.map{|val| [val,1]}], home: 1), id: "release_date_header"%>
+      </th>
       <th>More Info</th>
     </tr>
   </thead>
