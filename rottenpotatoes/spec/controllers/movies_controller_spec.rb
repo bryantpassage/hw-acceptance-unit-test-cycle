@@ -24,4 +24,70 @@ describe MoviesController do
             expect(flash[:notice]).to eq("'No Name' has no director information")       #expect a response from flash
         end
     end
+    
+    describe 'create movie' do
+        it 'should assign movie to @movie' do
+            post :create, movie: {title: 'New movie', rating: 'X', description: 'no description', release_date: '19-Nov-1999', director: 'Bryant Passage'}
+            expect(assigns(:movie).title).to include('New movie')
+        end
+        
+        it 'redirects to homepage' do
+            post :create, movie: {title: 'New movie', rating: 'X', description: 'no description', release_date: '19-Nov-1999', director: 'Bryant Passage'}
+            expect(response).to redirect_to(movies_path)
+            expect(flash[:notice]).to eq("New movie was successfully created.")
+        end
+    end
+    
+    describe 'show movie with id param' do
+        it 'should assign movie to @movie' do
+            get :show, {id: 1}
+            expect(assigns(:movie).title).to include('Aladdin')
+        end
+    end
+    
+    describe 'edit movie with id param' do
+        it 'should assign @movie with movie instance' do
+            get :edit, {id: 1}
+            expect(assigns(:movie).title).to include('Aladdin')
+        end
+    end
+    
+    describe 'update movie with id param' do
+        it 'should assign @movie with movie instance' do
+            put :update, id: 1, movie: {title: 'New movie', rating: 'X', description: 'no description', release_date: '19-Nov-1999', director: 'Bryant Passage'}
+            expect(assigns(:movie).title).to include('New movie')
+        end
+    
+        
+        it 'redirects to movie page' do
+            put :update, id: 1, movie: {title: 'New movie', rating: 'X', description: 'no description', release_date: '19-Nov-1999', director: 'Bryant Passage'}
+            expect(response).to redirect_to(movie_path(id: 1))
+            expect(flash[:notice]).to eq("New movie was successfully updated.")
+        end
+    end
+    
+    describe 'destroy movie with id param' do
+        it 'should assign @movie with movie instance' do
+            delete :destroy, id:1
+            expect(assigns(:movie).title).to include('Aladdin')
+        end
+        
+        it 'should redirect to homepage' do
+            delete :destroy, id:1
+            expect(response).to redirect_to(movies_path)
+            expect(flash[:notice]).to eq("Movie 'Aladdin' deleted.")
+        end
+    end
+    
+    describe 'show index of movies' do
+        it 'should call all_ratings' do
+            expect(Movie).to receive(:all_ratings)
+            get :index
+        end
+        
+        it 'should call get_movies' do
+            expect(Movie).to receive(:get_movies)
+            get :index
+        end
+    end
 end

@@ -20,4 +20,38 @@ describe Movie do
             end
         end
     end
+    
+    describe '.all_ratings' do
+        it 'should return all ratings' do
+            expect(Movie.all_ratings()).to eq(['G', 'PG', 'PG-13', 'R'])
+        end
+    end
+    
+    describe '.with_ratings' do
+        let!(:m1) { FactoryBot.create(:movie, title: 'Movie1', director: 'Director1', rating: 'X') }
+        let!(:m2) { FactoryBot.create(:movie, title: 'Movie2', director: 'Director2', rating: 'Y') }
+        
+        context  'if ratings list is empty' do
+            it 'calls .all' do
+                expect(Movie).to receive(:all)
+                Movie.with_ratings([])
+            end
+        end
+        
+        context 'if ratings list is not empty' do
+            it 'returns movie list with ratings specific to the movie' do
+                expect(Movie.with_ratings(['X'])).to eq([m1])
+            end
+        end
+    end
+    
+    describe '.get_movies' do
+        context 'if ratings list is empty and sort is not nil' do
+            it 'should call .where with certain parameters' do
+                expect(Movie).to receive(:order).with('title')
+                Movie.get_movies('title', [])
+            end
+        end
+    end
+                
 end
